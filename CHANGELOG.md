@@ -17,6 +17,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Package.swift for Swift Package Manager
 - GitHub templates (PR, Bug Report, Feature Request)
 - Git Flow workflow with develop branch
+- Core buffer functionality with Stack (LIFO) and Queue (FIFO) modes
+- ClipItem model with content type detection (plainText, url, code, email)
+- ClipBuffer with full buffer operations (push, pop, peek, clear, search)
+- Clipboard monitoring with NSPasteboard API
+- Automatic content type detection and source app tracking
+- Global hotkey system using Carbon Events API
+- 5 default hotkeys: Pop First (⌘⇧V), Pop Last (⌘⇧B), Toggle Mode (⌘⇧M), Show Buffer (⌘⇧C), Clear Buffer (⌘⇧X)
+- Menu bar badge showing item count
+- Unit tests for ClipBuffer (20+ test cases)
+- Unit tests for HotkeyManager
+- Documentation: HOTKEYS.md
 
 ### Changed
 - Moved all documentation to `docs/` folder
