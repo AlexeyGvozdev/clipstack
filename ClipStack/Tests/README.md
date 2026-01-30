@@ -21,13 +21,14 @@ xcodebuild test -scheme ClipStack -destination 'platform=macOS'
 ```
 Tests/
 ├── UnitTests/
-│   └── ClipBufferTests.swift    # Core buffer functionality tests
-└── IntegrationTests/             # Integration tests (coming soon)
+│   ├── ClipBufferTests.swift      # Core buffer functionality tests
+│   └── HotkeyManagerTests.swift   # Hotkey system tests
+└── IntegrationTests/               # Integration tests (coming soon)
 ```
 
 ## Test Coverage
 
-Current test coverage for Core module:
+### Core Module
 - ✅ ClipBuffer initialization
 - ✅ Push operations
 - ✅ Stack mode (LIFO) operations
@@ -36,6 +37,12 @@ Current test coverage for Core module:
 - ✅ Clear and remove operations
 - ✅ Search functionality
 - ✅ Old items removal
+
+### Hotkey Module
+- ✅ HotkeyManager initialization
+- ✅ Hotkey registration and unregistration
+- ✅ Hotkey identifier properties (display names, shortcuts, descriptions)
+- ✅ Delegate pattern (weak reference)
 
 ## Writing Tests
 
