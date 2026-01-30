@@ -12,10 +12,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
     var popover: NSPopover?
     
+    // Core components
+    private let clipBuffer = ClipBuffer()
+    private let clipboardMonitor = ClipboardMonitor()
+    
     func applicationDidFinishLaunching(_ notification: Notification) {
         setupMenuBar()
+        setupClipboardMonitoring()
         // TODO: Setup hotkeys
-        // TODO: Start clipboard monitoring
+    }
+    
+    private func setupClipboardMonitoring() {
+        clipboardMonitor.delegate = self
+        clipboardMonitor.startMonitoring()
     }
     
     private func setupMenuBar() {
@@ -48,5 +57,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func openSettings() {
         NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
         NSApp.activate(ignoringOtherApps: true)
+    }
+}
+
+// MARK: - ClipboardMonitorDelegate
+
+extension AppDelegate: ClipboardMonitorDelegate {
+    func clipboardDidChange(_ item: ClipItem) {
+        // Add item to buffer
+        clipBuffer.push(item)
+        
+        // Update menu bar icon badge with count
+        updateMenuBarBadge()
+    }
+    
+    private func updateMenuBarBadge() {
+        if let button = statusItem?.button {
+            let count = clipBuffer.count
+            button.title = count > 0 ? "📋 [\(count)]" : "📋"
+        }
     }
 }
