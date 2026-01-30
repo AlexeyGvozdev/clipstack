@@ -7,6 +7,7 @@
 
 import Cocoa
 import SwiftUI
+import UserNotifications
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
@@ -21,6 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setupMenuBar()
         setupClipboardMonitoring()
         setupHotkeys()
+        requestNotificationPermissions()
     }
     
     private func setupClipboardMonitoring() {
@@ -31,6 +33,34 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupHotkeys() {
         hotkeyManager.delegate = self
         hotkeyManager.registerDefaultHotkeys()
+    }
+    
+    private func requestNotificationPermissions() {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) { granted, error in
+            if let error = error {
+                print("Notification permission error: \(error)")
+            }
+        }
+    }
+    
+    private func showNotification(title: String, body: String) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = .default
+        
+        let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: nil
+        )
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Notification error: \(error)")
+            }
+        }
     }
     
     private func setupMenuBar() {
@@ -152,11 +182,10 @@ extension AppDelegate: HotkeyManagerDelegate {
         let newMode = clipBuffer.mode
         
         // Show notification about mode change
-        let notification = NSUserNotification()
-        notification.title = "ClipStack Mode Changed"
-        notification.informativeText = "Switched to \(newMode.displayName) mode"
-        notification.soundName = NSUserNotificationDefaultSoundName
-        NSUserNotificationCenter.default.deliver(notification)
+        showNotification(
+            title: "ClipStack Mode Changed",
+            body: "Switched to \(newMode.displayName) mode"
+        )
         
         print("Mode toggled to: \(newMode.displayName)")
     }
@@ -178,11 +207,10 @@ extension AppDelegate: HotkeyManagerDelegate {
         updateMenuBarBadge()
         
         // Show notification about clearing
-        let notification = NSUserNotification()
-        notification.title = "ClipStack Buffer Cleared"
-        notification.informativeText = "Removed \(count) item(s) from buffer"
-        notification.soundName = NSUserNotificationDefaultSoundName
-        NSUserNotificationCenter.default.deliver(notification)
+        showNotification(
+            title: "ClipStack Buffer Cleared",
+            body: "Removed \(count) item(s) from buffer"
+        )
         
         print("Buffer cleared: \(count) items removed")
     }
