@@ -26,7 +26,7 @@ let package = Package(
         .testTarget(
             name: "ClipStackTests",
             dependencies: ["ClipStack"],
-            path: "ClipStack/Tests"
+            path: "ClipStack/Tests/UnitTests"
         )
     ]
 )
