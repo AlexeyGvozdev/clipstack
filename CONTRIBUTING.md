@@ -25,14 +25,35 @@
 
 ### Отправить Pull Request
 
+Мы используем **Git Flow** с веткой `develop` для разработки:
+
 1. Fork репозитория
-2. Создайте ветку для вашей функции (`git checkout -b feature/amazing-feature`)
+2. Создайте ветку от `develop` для вашей задачи:
+   - `feature/task-name` - для новых функций
+   - `bugfix/issue-name` - для исправления багов
+   - `docs/update-name` - для обновления документации
 3. Следуйте стилю кода проекта
 4. Добавьте тесты для новой функциональности
 5. Убедитесь, что все тесты проходят
 6. Commit изменений (`git commit -m 'Add amazing feature'`)
-7. Push в ветку (`git push origin feature/amazing-feature`)
-8. Откройте Pull Request
+7. Push в ветку (`git push origin feature/task-name`)
+8. Откройте Pull Request **в ветку `develop`** (не в `main`!)
+
+#### Структура веток
+
+```
+main (production)
+  └── develop (development)
+       ├── feature/clipboard-monitor
+       ├── feature/hotkey-manager
+       └── bugfix/memory-leak
+```
+
+- **`main`** - стабильная версия для релизов
+- **`develop`** - основная ветка разработки
+- **`feature/*`** - новые функции (от `develop`)
+- **`bugfix/*`** - исправления багов (от `develop`)
+- **`hotfix/*`** - срочные исправления (от `main`)
 
 ## 📝 Стиль кода
 
