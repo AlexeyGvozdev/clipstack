@@ -20,13 +20,16 @@ final class ClipboardMonitor: ObservableObject {
     private var changeCount: Int
     private var timer: Timer?
     private let pollingInterval: TimeInterval
+    private let securityFilter: SecurityFilter
     
     weak var delegate: ClipboardMonitorDelegate?
+    var securityDelegate: ClipboardSecurityDelegate?
     
     // MARK: - Initialization
     
-    init(pollingInterval: TimeInterval = 0.5) {
+    init(pollingInterval: TimeInterval = 0.5, securityFilter: SecurityFilter = SecurityFilter()) {
         self.pollingInterval = pollingInterval
+        self.securityFilter = securityFilter
         self.changeCount = pasteboard.changeCount
     }
     
@@ -82,6 +85,14 @@ final class ClipboardMonitor: ObservableObject {
         
         guard let string = pasteboard.string(forType: .string),
               !string.isEmpty else { return }
+        
+        // Check for sensitive data
+        let sensitiveCheck = securityFilter.isSensitive(string)
+        if sensitiveCheck.isSensitive {
+            print("Blocked sensitive data: \(sensitiveCheck.detectedPattern?.description ?? "unknown")")
+            securityDelegate?.didBlockSensitiveData(pattern: sensitiveCheck.detectedPattern)
+            return
+        }
         
         let item = ClipItem(
             content: string,
@@ -146,4 +157,12 @@ protocol ClipboardMonitorDelegate: AnyObject {
     /// Called when clipboard content changes
     /// - Parameter item: The new clipboard item
     func clipboardDidChange(_ item: ClipItem)
+}
+
+// MARK: - ClipboardSecurityDelegate
+
+protocol ClipboardSecurityDelegate: AnyObject {
+    /// Called when sensitive data is detected and blocked
+    /// - Parameter pattern: The type of sensitive pattern detected
+    func didBlockSensitiveData(pattern: SecurityFilter.SensitivePattern?)
 }

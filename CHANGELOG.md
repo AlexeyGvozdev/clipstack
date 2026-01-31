@@ -33,6 +33,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SwiftLint checks in CI
 - Code quality checks (file headers, line count, TODO comments)
 - CI status badge in README
+- SecurityFilter class with 8 sensitive data patterns (passwords, credit cards, API keys, private keys, JWT tokens, emails, phone numbers, SSN)
+- Automatic blocking of sensitive clipboard content
+- User notifications when sensitive data is detected and blocked
+- ClipboardSecurityDelegate protocol for security event handling
+- Unit tests for SecurityFilter (25+ test cases)
+- Documentation: Security Module test coverage in Tests/README.md
 
 ### Changed
 - Moved all documentation to `docs/` folder

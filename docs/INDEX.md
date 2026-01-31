@@ -74,7 +74,16 @@
 - Обработка событий
 - Требования и разрешения
 
-### 7. [CI_CD.md](CI_CD.md)
+### 7. [SECURITY.md](SECURITY.md)
+**Security Filter - Фильтрация чувствительных данных**
+- 8 типов чувствительных данных
+- Автоматическая блокировка
+- Интеграция с ClipboardMonitor
+- Пользовательские конфигурации
+- Производительность и кэширование
+- Тестирование (25+ тестов)
+
+### 8. [CI_CD.md](CI_CD.md)
 **CI/CD Pipeline**
 - GitHub Actions workflow
 - Build and Test job
@@ -83,7 +92,7 @@
 - Локальная проверка
 - Troubleshooting
 
-### 8. [BLACKLIST_FEATURE.md](BLACKLIST_FEATURE.md)
+### 9. [BLACKLIST_FEATURE.md](BLACKLIST_FEATURE.md)
 **Функционал чёрного списка**
 - Назначение и примеры
 - Техническая реализация
@@ -91,7 +100,7 @@
 - Пресеты правил
 - Импорт/экспорт
 
-### 9. [AUTO_CLEAR_FEATURE.md](AUTO_CLEAR_FEATURE.md)
+### 10. [AUTO_CLEAR_FEATURE.md](AUTO_CLEAR_FEATURE.md)
 **Автоматическая очистка буфера**
 - Назначение и примеры
 - Техническая реализация
@@ -99,7 +108,7 @@
 - Уведомления
 - Статистика
 
-### 10. [QUICK_START.md](QUICK_START.md)
+### 11. [QUICK_START.md](QUICK_START.md)
 **Руководство пользователя**
 - Что такое ClipStack
 - Быстрые примеры
@@ -120,6 +129,7 @@ clipstack/
 ├── ARCHITECTURE.md             ← Техническая архитектура
 ├── DEVELOPMENT_PLAN.md         ← План разработки
 ├── HOTKEYS.md                  ← Система горячих клавиш
+├── SECURITY.md                 ← Security Filter
 ├── CI_CD.md                    ← CI/CD Pipeline
 ├── BLACKLIST_FEATURE.md        ← Чёрный список
 ├── AUTO_CLEAR_FEATURE.md       ← Автоочистка
@@ -140,8 +150,9 @@ clipstack/
 1. [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) - Обзор проекта
 2. [ARCHITECTURE.md](ARCHITECTURE.md) - Техническая архитектура
 3. [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md) - План работ
-4. [BLACKLIST_FEATURE.md](BLACKLIST_FEATURE.md) - Детали чёрного списка
-5. [AUTO_CLEAR_FEATURE.md](AUTO_CLEAR_FEATURE.md) - Детали автоочистки
+4. [SECURITY.md](SECURITY.md) - Security Filter
+5. [BLACKLIST_FEATURE.md](BLACKLIST_FEATURE.md) - Детали чёрного списка
+6. [AUTO_CLEAR_FEATURE.md](AUTO_CLEAR_FEATURE.md) - Детали автоочистки
 
 ### Для инвесторов/менеджеров
 1. [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) - Краткое резюме
@@ -181,8 +192,8 @@ clipstack/
 
 ## ✅ Статус проекта
 
-**Текущий статус**: MVP в разработке (Stage 4.1 - CI/CD)
-**Следующий шаг**: Security Filter (Stage 5)
+**Текущий статус**: MVP в разработке (Stage 5 - Security Filter)
+**Следующий шаг**: Blacklist Manager (Stage 6)
 **Версия документации**: 1.1
 **Дата обновления**: 2026-01-31
 
