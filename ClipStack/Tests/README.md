@@ -23,7 +23,8 @@ Tests/
 ├── UnitTests/
 │   ├── ClipBufferTests.swift        # Core buffer functionality tests
 │   ├── HotkeyManagerTests.swift     # Hotkey system tests
-│   └── SecurityFilterTests.swift    # Security filter tests
+│   ├── SecurityFilterTests.swift    # Security filter tests
+│   └── BlacklistManagerTests.swift  # Blacklist manager tests
 └── IntegrationTests/                 # Integration tests (coming soon)
 ```
 
@@ -57,6 +58,17 @@ Tests/
 - ✅ Multiple patterns detection
 - ✅ Custom filter configurations
 - ✅ Real-world scenarios
+
+### Blacklist Module
+- ✅ Rule management (add, remove, update, toggle)
+- ✅ Simple blacklist checking
+- ✅ Case-sensitive and case-insensitive matching
+- ✅ Disabled rules handling
+- ✅ Multiple rules support
+- ✅ Preset rules (development, privacy, temporary files)
+- ✅ Statistics (active/total counts)
+- ✅ Import/Export functionality
+- ✅ Real-world workflows
 
 ## Writing Tests
 
