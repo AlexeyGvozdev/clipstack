@@ -21,9 +21,10 @@ xcodebuild test -scheme ClipStack -destination 'platform=macOS'
 ```
 Tests/
 ├── UnitTests/
-│   ├── ClipBufferTests.swift      # Core buffer functionality tests
-│   └── HotkeyManagerTests.swift   # Hotkey system tests
-└── IntegrationTests/               # Integration tests (coming soon)
+│   ├── ClipBufferTests.swift        # Core buffer functionality tests
+│   ├── HotkeyManagerTests.swift     # Hotkey system tests
+│   └── SecurityFilterTests.swift    # Security filter tests
+└── IntegrationTests/                 # Integration tests (coming soon)
 ```
 
 ## Test Coverage
@@ -43,6 +44,19 @@ Tests/
 - ✅ Hotkey registration and unregistration
 - ✅ Hotkey identifier properties (display names, shortcuts, descriptions)
 - ✅ Delegate pattern (weak reference)
+
+### Security Module
+- ✅ Password pattern detection
+- ✅ Credit card number detection
+- ✅ API key detection
+- ✅ Private key detection
+- ✅ JWT token detection
+- ✅ Email address detection
+- ✅ Phone number detection
+- ✅ SSN detection
+- ✅ Multiple patterns detection
+- ✅ Custom filter configurations
+- ✅ Real-world scenarios
 
 ## Writing Tests
 

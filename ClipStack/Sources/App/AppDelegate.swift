@@ -27,6 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private func setupClipboardMonitoring() {
         clipboardMonitor.delegate = self
+        clipboardMonitor.securityDelegate = self
         clipboardMonitor.startMonitoring()
     }
     
@@ -213,5 +214,21 @@ extension AppDelegate: HotkeyManagerDelegate {
         )
         
         print("Buffer cleared: \(count) items removed")
+    }
+}
+
+// MARK: - ClipboardSecurityDelegate
+
+extension AppDelegate: ClipboardSecurityDelegate {
+    func didBlockSensitiveData(pattern: SecurityFilter.SensitivePattern?) {
+        let patternName = pattern?.description ?? "Unknown"
+        
+        // Show notification about blocked sensitive data
+        showNotification(
+            title: "🔒 Sensitive Data Blocked",
+            body: "Detected and blocked: \(patternName)"
+        )
+        
+        print("Blocked sensitive data: \(patternName)")
     }
 }
