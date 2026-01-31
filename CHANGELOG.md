@@ -100,6 +100,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Empty state view when no items or no search results
 - Integration with AppDelegate for hotkey support (⌘⇧C)
 - Documentation: PREVIEW_WINDOW.md with complete preview window guide
+- SettingsWindowController for managing settings window
+- SettingsView SwiftUI component with 6 tabs (General, Hotkeys, Security, Blacklist, Auto-Clear, About)
+- General settings: buffer mode, max buffer size, notifications, launch at login
+- Hotkeys display: all 5 hotkeys with icons, shortcuts, and descriptions
+- Security settings: security filter toggle and protected patterns display
+- Blacklist settings: blacklist toggle and preset rules display
+- Auto-clear settings: auto-clear toggle, presets, and options
+- About section: app information and GitHub link
+- Reusable components: HotkeyRow, PatternRow, PresetRow, BlacklistRuleRow
+- Real-time settings synchronization with SettingsManager
+- Integration with AppDelegate for menu bar access (⌘,)
+- Documentation: SETTINGS_WINDOW.md with complete settings window guide
 
 ### Changed
 - Moved all documentation to `docs/` folder
