@@ -24,6 +24,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }()
     private let hotkeyManager = HotkeyManager()
     
+    // Windows
+    private lazy var previewWindowController: PreviewWindowController = {
+        let controller = PreviewWindowController(
+            clipBuffer: self.clipBuffer,
+            clipboardMonitor: self.clipboardMonitor
+        )
+        controller.onCopyItem = { [weak self] item in
+            self?.updateMenuBarBadge()
+        }
+        controller.onDeleteItem = { [weak self] item in
+            self?.updateMenuBarBadge()
+        }
+        controller.onClearAll = { [weak self] in
+            self?.updateMenuBarBadge()
+        }
+        return controller
+    }()
+    
     func applicationDidFinishLaunching(_ notification: Notification) {
         setupMenuBar()
         setupClipboardMonitoring()
@@ -205,14 +223,8 @@ extension AppDelegate: HotkeyManagerDelegate {
     }
     
     private func handleShowBuffer() {
-        // TODO: Implement buffer preview window in Stage 10
-        print("Show buffer preview (not implemented yet)")
-        
-        // For now, print buffer contents to console
-        print("Buffer contents (\(clipBuffer.count) items):")
-        for (index, item) in clipBuffer.items.enumerated() {
-            print("\(index + 1). [\(item.contentType)] \(item.preview)")
-        }
+        // Show preview window
+        previewWindowController.show()
     }
     
     private func handleClearBuffer() {
