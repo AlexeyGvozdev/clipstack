@@ -31,12 +31,14 @@ class AutoClearManager: ObservableObject {
     
     weak var delegate: AutoClearManagerDelegate?
     
+    private let settingsManager: SettingsManager
     private let settingsKey = "clipstack.autoclear.settings"
     
     // MARK: - Initialization
     
-    init(settings: AutoClearSettings = AutoClearSettings()) {
+    init(settings: AutoClearSettings = AutoClearSettings(), settingsManager: SettingsManager = .shared) {
         self.settings = settings
+        self.settingsManager = settingsManager
         loadSettings()
     }
     
@@ -48,7 +50,7 @@ class AutoClearManager: ObservableObject {
     
     /// Запустить автоочистку
     func start() {
-        guard settings.isEnabled else { return }
+        guard settings.isEnabled && settingsManager.enableAutoClear else { return }
         resetTimer()
     }
     
@@ -113,7 +115,10 @@ class AutoClearManager: ObservableObject {
         settings = newSettings
         saveSettings()
         
-        if settings.isEnabled {
+        // Also update SettingsManager enableAutoClear flag
+        settingsManager.enableAutoClear = newSettings.isEnabled
+        
+        if settings.isEnabled && settingsManager.enableAutoClear {
             resetTimer()
         } else {
             stop()
@@ -141,7 +146,7 @@ class AutoClearManager: ObservableObject {
     
     /// Обработать активность (копирование)
     func handleActivity() {
-        guard settings.resetTimerOnActivity else { return }
+        guard settings.resetTimerOnActivity && settingsManager.enableAutoClear else { return }
         resetTimer()
     }
     

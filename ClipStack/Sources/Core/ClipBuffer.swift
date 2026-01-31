@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import CoreData
 
 /// Main clipboard buffer implementation
 final class ClipBuffer: ClipBufferProtocol, ObservableObject {
@@ -19,6 +20,11 @@ final class ClipBuffer: ClipBufferProtocol, ObservableObject {
     
     let maxSize: Int
     private let autoClearManager: AutoClearManager?
+    private let coreDataManager: CoreDataManager
+    private let settingsManager: SettingsManager
+    
+    // Auto-save timer
+    private var autoSaveTimer: Timer?
     
     var count: Int {
         items.count
@@ -34,10 +40,28 @@ final class ClipBuffer: ClipBufferProtocol, ObservableObject {
     
     // MARK: - Initialization
     
-    init(maxSize: Int = 100, autoClearManager: AutoClearManager? = nil) {
+    init(maxSize: Int = 100, autoClearManager: AutoClearManager? = nil,
+         coreDataManager: CoreDataManager = .shared,
+         settingsManager: SettingsManager = .shared) {
         self.maxSize = maxSize
         self.autoClearManager = autoClearManager
+        self.coreDataManager = coreDataManager
+        self.settingsManager = settingsManager
+        
+        // Set delegates
         self.autoClearManager?.delegate = self
+        
+        // Load items from Core Data if auto-save is enabled
+        if settingsManager.enableAutoSave {
+            loadItemsFromStorage()
+        }
+        
+        // Setup auto-save timer
+        setupAutoSave()
+    }
+    
+    deinit {
+        autoSaveTimer?.invalidate()
     }
     
     // MARK: - Public Methods
@@ -49,6 +73,11 @@ final class ClipBuffer: ClipBufferProtocol, ObservableObject {
         }
         
         items.append(item)
+        
+        // Save to Core Data if auto-save is enabled
+        if settingsManager.enableAutoSave {
+            saveItemToStorage(item)
+        }
         
         // Notify auto-clear manager about activity
         autoClearManager?.handleActivity()
@@ -88,6 +117,11 @@ final class ClipBuffer: ClipBufferProtocol, ObservableObject {
     
     func clear() {
         items.removeAll()
+        
+        // Clear from Core Data if auto-save is enabled
+        if settingsManager.enableAutoSave {
+            clearStorage()
+        }
     }
     
     /// Clear buffer and return count of removed items
@@ -111,20 +145,97 @@ final class ClipBuffer: ClipBufferProtocol, ObservableObject {
     
     func remove(at index: Int) {
         guard index >= 0 && index < items.count else { return }
+        let item = items[index]
         items.remove(at: index)
+        
+        // Remove from Core Data if auto-save is enabled
+        if settingsManager.enableAutoSave {
+            removeItemFromStorage(item)
+        }
     }
     
     func remove(id: UUID) {
-        items.removeAll { $0.id == id }
+        if let index = items.firstIndex(where: { $0.id == id }) {
+            remove(at: index)
+        }
     }
     
     func toggleMode() {
         mode.toggle()
+        
+        // Save mode to settings
+        settingsManager.bufferMode = mode
     }
     
     func removeOldItems(olderThan age: TimeInterval) {
         let cutoffDate = Date().addingTimeInterval(-age)
         items.removeAll { $0.timestamp < cutoffDate }
+    }
+}
+
+// MARK: - Core Data Integration
+
+private extension ClipBuffer {
+    /// Setup auto-save timer
+    func setupAutoSave() {
+        guard settingsManager.enableAutoSave else { return }
+        
+        autoSaveTimer = Timer.scheduledTimer(
+            withTimeInterval: settingsManager.autoSaveInterval,
+            repeats: true
+        ) { [weak self] _ in
+            self?.saveAllItemsToStorage()
+        }
+    }
+    
+    /// Load items from Core Data storage
+    func loadItemsFromStorage() {
+        do {
+            let loadedItems = try coreDataManager.loadItems(limit: maxSize)
+            items = loadedItems
+            
+            // Load mode from settings
+            mode = settingsManager.bufferMode
+        } catch {
+            print("Failed to load items from storage: \(error)")
+        }
+    }
+    
+    /// Save single item to Core Data
+    func saveItemToStorage(_ item: ClipItem) {
+        do {
+            try coreDataManager.saveItem(item)
+        } catch {
+            print("Failed to save item to storage: \(error)")
+        }
+    }
+    
+    /// Save all items to Core Data
+    func saveAllItemsToStorage() {
+        do {
+            try coreDataManager.deleteAllItems()
+            try coreDataManager.saveItems(items)
+        } catch {
+            print("Failed to save all items to storage: \(error)")
+        }
+    }
+    
+    /// Remove item from Core Data
+    func removeItemFromStorage(_ item: ClipItem) {
+        do {
+            try coreDataManager.deleteItem(withId: item.id)
+        } catch {
+            print("Failed to remove item from storage: \(error)")
+        }
+    }
+    
+    /// Clear all items from Core Data
+    func clearStorage() {
+        do {
+            try coreDataManager.deleteAllItems()
+        } catch {
+            print("Failed to clear storage: \(error)")
+        }
     }
 }
 

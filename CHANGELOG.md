@@ -71,6 +71,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Statistics methods (item count, storage size estimate)
 - Maintenance operations (cleanup old items, reset database)
 - Auto-save functionality with configurable interval
+- Preview window with SwiftUI interface
+- Settings window with 6 tabs (General, Hotkeys, Security, Blacklist, Auto-Clear, About)
+- Menu bar application with LSUIElement support
+- SettingsManager for centralized settings management
+- Complete UI integration with AppKit + SwiftUI
+
+### Added
+- **Module Integration**: Complete integration of all modules through AppCoordinator
+- **Core Data Integration**: Automatic saving and loading of clipboard items in ClipBuffer
+- **Settings Integration**: Centralized settings management across all modules
+- **AppCoordinator**: Central coordinator for managing all app modules and interactions
+- **Auto-save functionality**: Timer-based automatic saving to Core Data from ClipBuffer
+- **Settings synchronization**: Real-time settings application across all modules
+- **Simplified AppDelegate**: AppDelegate now uses AppCoordinator for all module management
+- **Module documentation**: Complete documentation of module integration in docs/MODULE_INTEGRATION.md
+
+### Changed
+- **ClipBuffer**: Now integrates with CoreDataManager and SettingsManager for persistence
+- **ClipboardMonitor**: Now respects security and blacklist settings from SettingsManager
+- **AutoClearManager**: Now synchronizes with SettingsManager for enable/disable state
+- **AppDelegate**: Simplified to delegate all functionality to AppCoordinator
 - SettingsManager for application settings persistence
 - Settings for buffer mode, notifications, security, auto-clear
 - App settings (launch at login, show in dock, theme)
