@@ -24,7 +24,8 @@ Tests/
 │   ├── ClipBufferTests.swift        # Core buffer functionality tests
 │   ├── HotkeyManagerTests.swift     # Hotkey system tests
 │   ├── SecurityFilterTests.swift    # Security filter tests
-│   └── BlacklistManagerTests.swift  # Blacklist manager tests
+│   ├── BlacklistManagerTests.swift  # Blacklist manager tests
+│   └── AutoClearManagerTests.swift  # Auto-clear manager tests
 └── IntegrationTests/                 # Integration tests (coming soon)
 ```
 
@@ -69,6 +70,17 @@ Tests/
 - ✅ Statistics (active/total counts)
 - ✅ Import/Export functionality
 - ✅ Real-world workflows
+
+### AutoClear Module
+- ✅ Default settings
+- ✅ Preset configurations (quick work, confidential, long session)
+- ✅ Preset intervals (5, 15, 30 min, 1, 2, 4 hours)
+- ✅ Start/Stop functionality
+- ✅ Settings update
+- ✅ Enable/Disable auto-clear
+- ✅ Activity handling (timer reset)
+- ✅ Formatted time display
+- ✅ Delegate integration (clear buffer, clear old items)
 
 ## Writing Tests
 
