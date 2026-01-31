@@ -8,39 +8,159 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @State private var selectedTab = 0
+    
     var body: some View {
-        TabView {
-            GeneralSettingsView()
-                .tabItem {
-                    Label("General", systemImage: "gear")
+        HStack(spacing: 0) {
+            // Sidebar
+            VStack(alignment: .leading, spacing: 0) {
+                // Header
+                HStack {
+                    Image(systemName: "gearshape.2.fill")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundColor(.accentColor)
+                    
+                    Text("Settings")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.primary)
                 }
+                .padding(20)
+                .padding(.bottom, 10)
+                
+                // Navigation items
+                VStack(spacing: 2) {
+                    SettingsNavItem(
+                        title: "General",
+                        icon: "gear",
+                        isSelected: selectedTab == 0
+                    ) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedTab = 0
+                        }
+                    }
+                    
+                    SettingsNavItem(
+                        title: "Hotkeys",
+                        icon: "keyboard",
+                        isSelected: selectedTab == 1
+                    ) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedTab = 1
+                        }
+                    }
+                    
+                    SettingsNavItem(
+                        title: "Security",
+                        icon: "lock.shield",
+                        isSelected: selectedTab == 2
+                    ) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedTab = 2
+                        }
+                    }
+                    
+                    SettingsNavItem(
+                        title: "Blacklist",
+                        icon: "xmark.circle",
+                        isSelected: selectedTab == 3
+                    ) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedTab = 3
+                        }
+                    }
+                    
+                    SettingsNavItem(
+                        title: "Auto-Clear",
+                        icon: "clock",
+                        isSelected: selectedTab == 4
+                    ) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedTab = 4
+                        }
+                    }
+                    
+                    SettingsNavItem(
+                        title: "About",
+                        icon: "info.circle",
+                        isSelected: selectedTab == 5
+                    ) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedTab = 5
+                        }
+                    }
+                }
+                
+                Spacer()
+            }
+            .frame(width: 200)
+            .background(Color(NSColor.controlBackgroundColor))
             
-            HotkeysSettingsView()
-                .tabItem {
-                    Label("Hotkeys", systemImage: "keyboard")
-                }
+            Divider()
             
-            SecuritySettingsView()
-                .tabItem {
-                    Label("Security", systemImage: "lock.shield")
+            // Content area
+            Group {
+                switch selectedTab {
+                case 0:
+                    GeneralSettingsView()
+                case 1:
+                    HotkeysSettingsView()
+                case 2:
+                    SecuritySettingsView()
+                case 3:
+                    BlacklistSettingsView()
+                case 4:
+                    AutoClearSettingsView()
+                case 5:
+                    AboutView()
+                default:
+                    GeneralSettingsView()
                 }
-            
-            BlacklistSettingsView()
-                .tabItem {
-                    Label("Blacklist", systemImage: "xmark.circle")
-                }
-            
-            AutoClearSettingsView()
-                .tabItem {
-                    Label("Auto-Clear", systemImage: "clock")
-                }
-            
-            AboutView()
-                .tabItem {
-                    Label("About", systemImage: "info.circle")
-                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color(NSColor.windowBackgroundColor))
         }
-        .frame(width: 600, height: 400)
+        .frame(width: 700, height: 500)
+        .onAppear {
+            // Set initial appearance
+            withAnimation(.easeInOut(duration: 0.3)) {
+                selectedTab = 0
+            }
+        }
+    }
+}
+
+// MARK: - Settings Navigation Item
+
+struct SettingsNavItem: View {
+    let title: String
+    let icon: String
+    let isSelected: Bool
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                Image(systemName: icon)
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(isSelected ? .white : .secondary)
+                    .frame(width: 20)
+                
+                Text(title)
+                    .font(.system(size: 14, weight: isSelected ? .semibold : .medium))
+                    .foregroundColor(isSelected ? .white : .primary)
+                
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(isSelected ? Color.accentColor : Color.clear)
+            )
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 2)
     }
 }
 
@@ -53,50 +173,137 @@ struct GeneralSettingsView: View {
     @State private var launchAtLogin: Bool = SettingsManager.shared.launchAtLogin
     
     var body: some View {
-        Form {
-            Section(header: Text("Buffer Settings").font(.headline)) {
-                Picker("Mode:", selection: $bufferMode) {
-                    Text("Stack (LIFO)").tag(BufferMode.stack)
-                    Text("Queue (FIFO)").tag(BufferMode.queue)
-                }
-                .onChange(of: bufferMode) { newValue in
-                    SettingsManager.shared.bufferMode = newValue
+        ScrollView {
+            VStack(spacing: 24) {
+                // Buffer Settings Card
+                SettingsCard(title: "Buffer Settings", icon: "list.bullet.clipboard") {
+                    VStack(spacing: 20) {
+                        // Mode Selection
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Buffer Mode")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(.primary)
+                            
+                            HStack(spacing: 12) {
+                                ForEach([BufferMode.stack, BufferMode.queue], id: \.self) { mode in
+                                    Button(action: {
+                                        withAnimation(.easeInOut(duration: 0.2)) {
+                                            bufferMode = mode
+                                            SettingsManager.shared.bufferMode = mode
+                                        }
+                                    }) {
+                                        HStack(spacing: 8) {
+                                            Image(systemName: mode.icon)
+                                                .font(.system(size: 14, weight: .medium))
+                                            Text(mode.displayName)
+                                                .font(.system(size: 13, weight: .medium))
+                                        }
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 10)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .fill(bufferMode == mode ? Color.accentColor : Color(NSColor.controlBackgroundColor))
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 8)
+                                                        .stroke(bufferMode == mode ? Color.clear : Color(NSColor.separatorColor), lineWidth: 1)
+                                                )
+                                        )
+                                        .foregroundColor(bufferMode == mode ? .white : .primary)
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                            
+                            Text(bufferMode.description)
+                                .font(.system(size: 12))
+                                .foregroundColor(.secondary)
+                                .padding(.top, 4)
+                        }
+                        
+                        Divider()
+                        
+                        // Buffer Size Slider
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                Text("Max Buffer Size")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(.primary)
+                                
+                                Spacer()
+                                
+                                Text("\(Int(maxBufferSize)) items")
+                                    .font(.system(size: 14, weight: .medium))
+                                    .foregroundColor(.accentColor)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 4)
+                                    .background(Color.accentColor.opacity(0.1))
+                                    .cornerRadius(6)
+                            }
+                            
+                            Slider(value: $maxBufferSize, in: 10...500, step: 10)
+                                .onChange(of: maxBufferSize) { newValue in
+                                    SettingsManager.shared.maxBufferSize = Int(newValue)
+                                }
+                            
+                            Text("Number of items to keep in history")
+                                .font(.system(size: 12))
+                                .foregroundColor(.secondary)
+                        }
+                    }
                 }
                 
-                VStack(alignment: .leading) {
-                    Text("Max Buffer Size: \(Int(maxBufferSize))")
-                    Slider(value: $maxBufferSize, in: 10...500, step: 10)
-                        .onChange(of: maxBufferSize) { newValue in
-                            SettingsManager.shared.maxBufferSize = Int(newValue)
+                // Notifications Card
+                SettingsCard(title: "Notifications", icon: "bell") {
+                    VStack(spacing: 16) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Enable Notifications")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(.primary)
+                                
+                                Text("Show notifications for clipboard events")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                            
+                            Toggle("", isOn: $enableNotifications)
+                                .onChange(of: enableNotifications) { newValue in
+                                    SettingsManager.shared.enableNotifications = newValue
+                                }
+                                .toggleStyle(SwitchToggleStyle())
                         }
-                    Text("Number of items to keep in history")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                    }
+                }
+                
+                // Startup Card
+                SettingsCard(title: "Startup", icon: "power") {
+                    VStack(spacing: 16) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Launch at Login")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(.primary)
+                                
+                                Text("Automatically start ClipStack when you log in")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                            
+                            Toggle("", isOn: $launchAtLogin)
+                                .onChange(of: launchAtLogin) { newValue in
+                                    SettingsManager.shared.launchAtLogin = newValue
+                                }
+                                .toggleStyle(SwitchToggleStyle())
+                        }
+                    }
                 }
             }
-            
-            Section(header: Text("Notifications").font(.headline)) {
-                Toggle("Enable Notifications", isOn: $enableNotifications)
-                    .onChange(of: enableNotifications) { newValue in
-                        SettingsManager.shared.enableNotifications = newValue
-                    }
-                Text("Show notifications for clipboard events")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            
-            Section(header: Text("Startup").font(.headline)) {
-                Toggle("Launch at Login", isOn: $launchAtLogin)
-                    .onChange(of: launchAtLogin) { newValue in
-                        SettingsManager.shared.launchAtLogin = newValue
-                    }
-                Text("Automatically start ClipStack when you log in")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
+            .padding(24)
         }
-        .padding()
-        .frame(minWidth: 500)
     }
 }
 
@@ -453,6 +660,56 @@ struct AboutView: View {
                 .font(.footnote)
         }
         .padding()
+    }
+}
+
+// MARK: - Settings Card
+
+struct SettingsCard<Content: View>: View {
+    let title: String
+    let icon: String
+    let content: Content
+    
+    init(title: String, icon: String, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.icon = icon
+        self.content = content()
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // Header
+            HStack(spacing: 12) {
+                Image(systemName: icon)
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundColor(.accentColor)
+                    .frame(width: 32, height: 32)
+                    .background(Color.accentColor.opacity(0.1))
+                    .cornerRadius(8)
+                
+                Text(title)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.primary)
+                
+                Spacer()
+            }
+            .padding(20)
+            .padding(.bottom, 16)
+            
+            // Content
+            content
+                .padding(.horizontal, 20)
+                .padding(.bottom, 20)
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(NSColor.controlBackgroundColor))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+                )
+        )
+        .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
     }
 }
 
