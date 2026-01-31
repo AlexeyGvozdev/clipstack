@@ -62,6 +62,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings persistence via UserDefaults
 - Unit tests for AutoClearManager (10+ test cases)
 - Documentation: AutoClear Module test coverage in Tests/README.md
+- Core Data model (ClipStack.xcdatamodeld) with ClipItemEntity
+- ClipItemEntity NSManagedObject with conversion methods
+- CoreDataManager singleton for persistent storage
+- Save/load operations for ClipItems (single and batch)
+- Advanced fetch requests (by type, source app, date range)
+- Delete operations (single, multiple, all, old items)
+- Statistics methods (item count, storage size estimate)
+- Maintenance operations (cleanup old items, reset database)
+- Auto-save functionality with configurable interval
+- SettingsManager for application settings persistence
+- Settings for buffer mode, notifications, security, auto-clear
+- App settings (launch at login, show in dock, theme)
+- Settings export/import functionality
+- AppTheme enum (system, light, dark)
+- Unit tests for CoreDataManager (20+ test cases)
+- Unit tests for SettingsManager (25+ test cases)
+- Documentation: Storage Module test coverage in Tests/README.md
 
 ### Changed
 - Moved all documentation to `docs/` folder

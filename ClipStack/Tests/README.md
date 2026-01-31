@@ -25,7 +25,9 @@ Tests/
 │   ├── HotkeyManagerTests.swift     # Hotkey system tests
 │   ├── SecurityFilterTests.swift    # Security filter tests
 │   ├── BlacklistManagerTests.swift  # Blacklist manager tests
-│   └── AutoClearManagerTests.swift  # Auto-clear manager tests
+│   ├── AutoClearManagerTests.swift  # Auto-clear manager tests
+│   ├── CoreDataManagerTests.swift   # Core Data storage tests
+│   └── SettingsManagerTests.swift   # Settings management tests
 └── IntegrationTests/                 # Integration tests (coming soon)
 ```
 
@@ -81,6 +83,18 @@ Tests/
 - ✅ Activity handling (timer reset)
 - ✅ Formatted time display
 - ✅ Delegate integration (clear buffer, clear old items)
+
+### Storage Module
+- ✅ Core Data setup and initialization
+- ✅ Save single and multiple items
+- ✅ Load items with various filters (type, source app, date)
+- ✅ Load items with limit and sorting
+- ✅ Delete operations (single, multiple, all, old items)
+- ✅ Statistics (item count, storage size)
+- ✅ Maintenance operations (cleanup, reset)
+- ✅ Settings persistence (buffer mode, notifications, security)
+- ✅ Settings export/import
+- ✅ Default values and reset functionality
 
 ## Writing Tests
 
