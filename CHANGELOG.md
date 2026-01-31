@@ -39,6 +39,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ClipboardSecurityDelegate protocol for security event handling
 - Unit tests for SecurityFilter (25+ test cases)
 - Documentation: Security Module test coverage in Tests/README.md
+- BlacklistRule model with pattern matching support
+- BlacklistManager with rule management (add, remove, update, toggle)
+- BlacklistStorage protocol with UserDefaults implementation
+- Case-sensitive and case-insensitive pattern matching
+- Preset rules: Development, Privacy, Temporary Files
+- Import/Export functionality for blacklist rules (JSON format)
+- Integration with ClipboardMonitor for automatic content blocking
+- ClipboardBlacklistDelegate protocol for blacklist event handling
+- User notifications when content is blocked by blacklist
+- Unit tests for BlacklistManager (25+ test cases)
+- Documentation: Blacklist Module test coverage in Tests/README.md
 
 ### Changed
 - Moved all documentation to `docs/` folder

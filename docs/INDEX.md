@@ -192,8 +192,8 @@ clipstack/
 
 ## ✅ Статус проекта
 
-**Текущий статус**: MVP в разработке (Stage 5 - Security Filter)
-**Следующий шаг**: Blacklist Manager (Stage 6)
+**Текущий статус**: MVP в разработке (Stage 6 - Blacklist Manager)
+**Следующий шаг**: AutoClear Manager (Stage 7)
 **Версия документации**: 1.1
 **Дата обновления**: 2026-01-31
 

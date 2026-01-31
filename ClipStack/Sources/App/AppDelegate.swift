@@ -15,7 +15,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // Core components
     private let clipBuffer = ClipBuffer()
-    private let clipboardMonitor = ClipboardMonitor()
+    private let blacklistManager = BlacklistManager()
+    private lazy var clipboardMonitor: ClipboardMonitor = {
+        ClipboardMonitor(blacklistManager: self.blacklistManager)
+    }()
     private let hotkeyManager = HotkeyManager()
     
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -28,6 +31,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupClipboardMonitoring() {
         clipboardMonitor.delegate = self
         clipboardMonitor.securityDelegate = self
+        clipboardMonitor.blacklistDelegate = self
         clipboardMonitor.startMonitoring()
     }
     
@@ -230,5 +234,21 @@ extension AppDelegate: ClipboardSecurityDelegate {
         )
         
         print("Blocked sensitive data: \(patternName)")
+    }
+}
+
+// MARK: - ClipboardBlacklistDelegate
+
+extension AppDelegate: ClipboardBlacklistDelegate {
+    func didBlockByBlacklist(rule: BlacklistRule?) {
+        let ruleName = rule?.description ?? rule?.pattern ?? "Unknown rule"
+        
+        // Show notification about blocked content
+        showNotification(
+            title: "🚫 Content Blocked",
+            body: "Blocked by blacklist: \(ruleName)"
+        )
+        
+        print("Blocked by blacklist: \(ruleName)")
     }
 }

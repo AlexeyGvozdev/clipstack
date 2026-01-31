@@ -21,15 +21,22 @@ final class ClipboardMonitor: ObservableObject {
     private var timer: Timer?
     private let pollingInterval: TimeInterval
     private let securityFilter: SecurityFilter
+    private let blacklistManager: BlacklistManager
     
     weak var delegate: ClipboardMonitorDelegate?
     var securityDelegate: ClipboardSecurityDelegate?
+    var blacklistDelegate: ClipboardBlacklistDelegate?
     
     // MARK: - Initialization
     
-    init(pollingInterval: TimeInterval = 0.5, securityFilter: SecurityFilter = SecurityFilter()) {
+    init(
+        pollingInterval: TimeInterval = 0.5,
+        securityFilter: SecurityFilter = SecurityFilter(),
+        blacklistManager: BlacklistManager = BlacklistManager()
+    ) {
         self.pollingInterval = pollingInterval
         self.securityFilter = securityFilter
+        self.blacklistManager = blacklistManager
         self.changeCount = pasteboard.changeCount
     }
     
@@ -91,6 +98,14 @@ final class ClipboardMonitor: ObservableObject {
         if sensitiveCheck.isSensitive {
             print("Blocked sensitive data: \(sensitiveCheck.detectedPattern?.description ?? "unknown")")
             securityDelegate?.didBlockSensitiveData(pattern: sensitiveCheck.detectedPattern)
+            return
+        }
+        
+        // Check blacklist
+        let blacklistCheck = blacklistManager.isBlacklisted(string)
+        if blacklistCheck.blocked {
+            print("Blocked by blacklist: \(blacklistCheck.matchedRule?.description ?? blacklistCheck.matchedRule?.pattern ?? "unknown")")
+            blacklistDelegate?.didBlockByBlacklist(rule: blacklistCheck.matchedRule)
             return
         }
         
@@ -165,4 +180,12 @@ protocol ClipboardSecurityDelegate: AnyObject {
     /// Called when sensitive data is detected and blocked
     /// - Parameter pattern: The type of sensitive pattern detected
     func didBlockSensitiveData(pattern: SecurityFilter.SensitivePattern?)
+}
+
+// MARK: - ClipboardBlacklistDelegate
+
+protocol ClipboardBlacklistDelegate: AnyObject {
+    /// Called when content is blocked by blacklist
+    /// - Parameter rule: The blacklist rule that matched
+    func didBlockByBlacklist(rule: BlacklistRule?)
 }
