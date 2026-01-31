@@ -24,14 +24,37 @@ ClipStack - это нативное macOS приложение, которое �
 
 ## 🚀 Быстрый старт
 
+### Сборка и запуск
+
 ```bash
 # Клонировать репозиторий
 git clone https://github.com/yourusername/clipstack.git
 cd clipstack
 
-# Открыть в Xcode
-open ClipStack.xcodeproj
+# Собрать App Bundle
+chmod +x scripts/create-app-bundle.sh
+./scripts/create-app-bundle.sh
+
+# Запустить приложение
+open .build/release/ClipStack.app
 ```
+
+### Разработка
+
+```bash
+# Собрать проект
+swift build
+
+# Запустить тесты
+swift test
+
+# Запустить линтер
+swiftlint
+```
+
+**Примечание**: Приложение требует разрешений в System Settings:
+- Privacy & Security → Accessibility (для горячих клавиш)
+- Privacy & Security → Automation (для Apple Events)
 
 ## ⌨️ Горячие клавиши
 
@@ -50,9 +73,12 @@ open ClipStack.xcodeproj
 - 📖 [Полное руководство](docs/README.md) - Детальное описание всех возможностей
 - 🏗️ [Архитектура](docs/ARCHITECTURE.md) - Техническая архитектура проекта
 - 📋 [План разработки](docs/DEVELOPMENT_PLAN.md) - Детальный план разработки MVP
-- 🚫 [Чёрный список](docs/BLACKLIST_FEATURE.md) - Функционал фильтрации
+- ⌨️ [Горячие клавиши](docs/HOTKEYS.md) - Система горячих клавиш
+- 🔒 [Безопасность](docs/SECURITY.md) - Фильтрация чувствительных данных
+-  [Чёрный список](docs/BLACKLIST_FEATURE.md) - Функционал фильтрации
 - ⏱️ [Автоочистка](docs/AUTO_CLEAR_FEATURE.md) - Автоматическая очистка буфера
-- 🚀 [Быстрый старт](docs/QUICK_START.md) - Руководство пользователя
+- 📱 [Menu Bar App](docs/MENU_BAR.md) - Интерфейс в строке меню
+- � [Быстрый старт](docs/QUICK_START.md) - Руководство пользователя
 - 📊 [Резюме проекта](docs/PROJECT_SUMMARY.md) - Краткое описание проекта
 - 🗺️ [Навигация](docs/INDEX.md) - Индекс всей документации
 
@@ -70,11 +96,13 @@ open ClipStack.xcodeproj
 - [x] Базовый перехват копирования
 - [x] Режимы Stack и Queue
 - [x] Горячие клавиши
+- [x] Фильтры безопасности
+- [x] Чёрный список
+- [x] Автоочистка по таймеру
+- [x] Core Data хранилище
 - [x] Menu bar интерфейс
 - [ ] Окно предпросмотра
-- [ ] Фильтры безопасности
-- [ ] Чёрный список
-- [ ] Автоочистка по таймеру
+- [ ] Окно настроек
 
 ### v1.1 - Q2 2026
 - [ ] Поиск по содержимому

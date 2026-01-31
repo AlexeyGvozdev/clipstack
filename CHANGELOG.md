@@ -79,6 +79,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unit tests for CoreDataManager (20+ test cases)
 - Unit tests for SettingsManager (25+ test cases)
 - Documentation: Storage Module test coverage in Tests/README.md
+- AppDelegate with menu bar integration (NSStatusItem)
+- Menu bar icon with badge counter showing buffer item count
+- Context menu with all main actions and hotkey shortcuts
+- Integration with all modules (ClipBuffer, ClipboardMonitor, HotkeyManager, SecurityFilter, BlacklistManager, AutoClearManager)
+- Delegate implementations for clipboard, hotkeys, security, and blacklist events
+- UserNotifications support for clipboard events
+- Info.plist with proper bundle configuration (LSUIElement, usage descriptions)
+- Entitlements file with required permissions (Apple Events, File Access)
+- Build script (create-app-bundle.sh) for creating proper macOS App Bundle
+- Documentation: MENU_BAR.md with complete menu bar app guide
 
 ### Changed
 - Moved all documentation to `docs/` folder
