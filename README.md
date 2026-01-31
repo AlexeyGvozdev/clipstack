@@ -2,6 +2,7 @@
 
 > Умный менеджер буфера обмена для macOS с поддержкой режимов Stack и Queue
 
+[![CI](https://github.com/AlexeyGvozdev/clipstack/actions/workflows/ci.yml/badge.svg)](https://github.com/AlexeyGvozdev/clipstack/actions/workflows/ci.yml)
 [![macOS](https://img.shields.io/badge/macOS-12.0+-blue.svg)](https://www.apple.com/macos/)
 [![Swift](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)

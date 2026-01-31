@@ -66,7 +66,24 @@
 
 ## 🎯 Специализированная документация
 
-### 6. [BLACKLIST_FEATURE.md](BLACKLIST_FEATURE.md)
+### 6. [HOTKEYS.md](HOTKEYS.md)
+**Система горячих клавиш**
+- Архитектура HotkeyManager
+- Горячие клавиши по умолчанию
+- Интеграция с Carbon Events API
+- Обработка событий
+- Требования и разрешения
+
+### 7. [CI_CD.md](CI_CD.md)
+**CI/CD Pipeline**
+- GitHub Actions workflow
+- Build and Test job
+- SwiftLint проверки
+- Code Quality checks
+- Локальная проверка
+- Troubleshooting
+
+### 8. [BLACKLIST_FEATURE.md](BLACKLIST_FEATURE.md)
 **Функционал чёрного списка**
 - Назначение и примеры
 - Техническая реализация
@@ -74,7 +91,7 @@
 - Пресеты правил
 - Импорт/экспорт
 
-### 7. [AUTO_CLEAR_FEATURE.md](AUTO_CLEAR_FEATURE.md)
+### 9. [AUTO_CLEAR_FEATURE.md](AUTO_CLEAR_FEATURE.md)
 **Автоматическая очистка буфера**
 - Назначение и примеры
 - Техническая реализация
@@ -82,7 +99,7 @@
 - Уведомления
 - Статистика
 
-### 8. [QUICK_START.md](QUICK_START.md)
+### 10. [QUICK_START.md](QUICK_START.md)
 **Руководство пользователя**
 - Что такое ClipStack
 - Быстрые примеры
@@ -102,6 +119,8 @@ clipstack/
 ├── PROJECT_CONCEPT.md          ← Детальная концепция
 ├── ARCHITECTURE.md             ← Техническая архитектура
 ├── DEVELOPMENT_PLAN.md         ← План разработки
+├── HOTKEYS.md                  ← Система горячих клавиш
+├── CI_CD.md                    ← CI/CD Pipeline
 ├── BLACKLIST_FEATURE.md        ← Чёрный список
 ├── AUTO_CLEAR_FEATURE.md       ← Автоочистка
 └── QUICK_START.md              ← Руководство пользователя
@@ -162,10 +181,10 @@ clipstack/
 
 ## ✅ Статус проекта
 
-**Текущий статус**: Концепция и архитектура готовы  
-**Следующий шаг**: Начать разработку MVP  
-**Версия документации**: 1.0  
-**Дата обновления**: 2026-01-29
+**Текущий статус**: MVP в разработке (Stage 4.1 - CI/CD)
+**Следующий шаг**: Security Filter (Stage 5)
+**Версия документации**: 1.1
+**Дата обновления**: 2026-01-31
 
 ---
 
