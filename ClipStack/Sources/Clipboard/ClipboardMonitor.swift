@@ -22,6 +22,7 @@ final class ClipboardMonitor: ObservableObject {
     private let pollingInterval: TimeInterval
     private let securityFilter: SecurityFilter
     private let blacklistManager: BlacklistManager
+    private let settingsManager: SettingsManager
     
     weak var delegate: ClipboardMonitorDelegate?
     var securityDelegate: ClipboardSecurityDelegate?
@@ -32,11 +33,13 @@ final class ClipboardMonitor: ObservableObject {
     init(
         pollingInterval: TimeInterval = 0.5,
         securityFilter: SecurityFilter = SecurityFilter(),
-        blacklistManager: BlacklistManager = BlacklistManager()
+        blacklistManager: BlacklistManager = BlacklistManager(),
+        settingsManager: SettingsManager = .shared
     ) {
         self.pollingInterval = pollingInterval
         self.securityFilter = securityFilter
         self.blacklistManager = blacklistManager
+        self.settingsManager = settingsManager
         self.changeCount = pasteboard.changeCount
     }
     
@@ -93,20 +96,24 @@ final class ClipboardMonitor: ObservableObject {
         guard let string = pasteboard.string(forType: .string),
               !string.isEmpty else { return }
         
-        // Check for sensitive data
-        let sensitiveCheck = securityFilter.isSensitive(string)
-        if sensitiveCheck.isSensitive {
-            print("Blocked sensitive data: \(sensitiveCheck.detectedPattern?.description ?? "unknown")")
-            securityDelegate?.didBlockSensitiveData(pattern: sensitiveCheck.detectedPattern)
-            return
+        // Check for sensitive data if enabled
+        if settingsManager.enableSecurityFilter {
+            let sensitiveCheck = securityFilter.isSensitive(string)
+            if sensitiveCheck.isSensitive {
+                print("Blocked sensitive data: \(sensitiveCheck.detectedPattern?.description ?? "unknown")")
+                securityDelegate?.didBlockSensitiveData(pattern: sensitiveCheck.detectedPattern)
+                return
+            }
         }
         
-        // Check blacklist
-        let blacklistCheck = blacklistManager.isBlacklisted(string)
-        if blacklistCheck.blocked {
-            print("Blocked by blacklist: \(blacklistCheck.matchedRule?.description ?? blacklistCheck.matchedRule?.pattern ?? "unknown")")
-            blacklistDelegate?.didBlockByBlacklist(rule: blacklistCheck.matchedRule)
-            return
+        // Check blacklist if enabled
+        if settingsManager.enableBlacklist {
+            let blacklistCheck = blacklistManager.isBlacklisted(string)
+            if blacklistCheck.blocked {
+                print("Blocked by blacklist: \(blacklistCheck.matchedRule?.description ?? blacklistCheck.matchedRule?.pattern ?? "unknown")")
+                blacklistDelegate?.didBlockByBlacklist(rule: blacklistCheck.matchedRule)
+                return
+            }
         }
         
         let item = ClipItem(
