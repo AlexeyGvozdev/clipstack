@@ -89,6 +89,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Entitlements file with required permissions (Apple Events, File Access)
 - Build script (create-app-bundle.sh) for creating proper macOS App Bundle
 - Documentation: MENU_BAR.md with complete menu bar app guide
+- PreviewWindowController for managing preview window
+- PreviewView SwiftUI component with search and filter functionality
+- ClipItemRowView component for displaying individual clipboard items
+- Search functionality for filtering items by content
+- Content type filter (Text, URL, Code, Email)
+- Item actions: copy to clipboard, delete item
+- Clear all functionality with confirmation
+- Hover effects and animations for better UX
+- Empty state view when no items or no search results
+- Integration with AppDelegate for hotkey support (⌘⇧C)
+- Documentation: PREVIEW_WINDOW.md with complete preview window guide
 
 ### Changed
 - Moved all documentation to `docs/` folder
