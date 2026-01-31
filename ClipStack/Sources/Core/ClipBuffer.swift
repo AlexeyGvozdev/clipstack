@@ -18,6 +18,7 @@ final class ClipBuffer: ClipBufferProtocol, ObservableObject {
     // MARK: - Properties
     
     let maxSize: Int
+    private let autoClearManager: AutoClearManager?
     
     var count: Int {
         items.count
@@ -33,8 +34,10 @@ final class ClipBuffer: ClipBufferProtocol, ObservableObject {
     
     // MARK: - Initialization
     
-    init(maxSize: Int = 100) {
+    init(maxSize: Int = 100, autoClearManager: AutoClearManager? = nil) {
         self.maxSize = maxSize
+        self.autoClearManager = autoClearManager
+        self.autoClearManager?.delegate = self
     }
     
     // MARK: - Public Methods
@@ -46,6 +49,9 @@ final class ClipBuffer: ClipBufferProtocol, ObservableObject {
         }
         
         items.append(item)
+        
+        // Notify auto-clear manager about activity
+        autoClearManager?.handleActivity()
     }
     
     func pop() -> ClipItem? {
@@ -82,6 +88,25 @@ final class ClipBuffer: ClipBufferProtocol, ObservableObject {
     
     func clear() {
         items.removeAll()
+    }
+    
+    /// Clear buffer and return count of removed items
+    /// - Returns: Number of items removed
+    @discardableResult
+    func clearAndCount() -> Int {
+        let count = items.count
+        items.removeAll()
+        return count
+    }
+    
+    /// Remove old items and return count of removed items
+    /// - Parameter age: Maximum age in seconds
+    /// - Returns: Number of items removed
+    @discardableResult
+    func removeOldItemsAndCount(olderThan age: TimeInterval) -> Int {
+        let beforeCount = items.count
+        removeOldItems(olderThan: age)
+        return beforeCount - items.count
     }
     
     func remove(at index: Int) {
@@ -131,5 +156,17 @@ extension ClipBuffer {
     func search(query: String) -> [ClipItem] {
         guard !query.isEmpty else { return items }
         return items.filter { $0.content.localizedCaseInsensitiveContains(query) }
+    }
+}
+
+// MARK: - AutoClearManagerDelegate
+
+extension ClipBuffer: AutoClearManagerDelegate {
+    func autoClearShouldClearBuffer() -> Int {
+        return clearAndCount()
+    }
+    
+    func autoClearShouldClearOldItems(olderThan age: TimeInterval) -> Int {
+        return removeOldItemsAndCount(olderThan: age)
     }
 }

@@ -14,7 +14,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var popover: NSPopover?
     
     // Core components
-    private let clipBuffer = ClipBuffer()
+    private let autoClearManager = AutoClearManager()
+    private lazy var clipBuffer: ClipBuffer = {
+        ClipBuffer(autoClearManager: self.autoClearManager)
+    }()
     private let blacklistManager = BlacklistManager()
     private lazy var clipboardMonitor: ClipboardMonitor = {
         ClipboardMonitor(blacklistManager: self.blacklistManager)
@@ -25,7 +28,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setupMenuBar()
         setupClipboardMonitoring()
         setupHotkeys()
+        setupAutoClear()
         requestNotificationPermissions()
+    }
+    
+    private func setupAutoClear() {
+        // Start auto-clear if enabled
+        autoClearManager.start()
     }
     
     private func setupClipboardMonitoring() {

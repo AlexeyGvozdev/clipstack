@@ -50,6 +50,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - User notifications when content is blocked by blacklist
 - Unit tests for BlacklistManager (25+ test cases)
 - Documentation: Blacklist Module test coverage in Tests/README.md
+- AutoClearSettings model with configurable intervals and presets
+- AutoClearManager class with timer-based automatic buffer clearing
+- 7 preset time intervals: 5min, 15min, 30min, 1hour, 2hours, 4hours, never
+- Preset configurations: quickWork, confidential, longSession, disabled
+- Countdown timer with real-time UI updates
+- Notification support (before clear and after clear)
+- Activity handling (reset timer on user activity)
+- Postpone functionality for delaying scheduled clears
+- Integration with ClipBuffer via AutoClearManagerDelegate protocol
+- Settings persistence via UserDefaults
+- Unit tests for AutoClearManager (10+ test cases)
+- Documentation: AutoClear Module test coverage in Tests/README.md
 
 ### Changed
 - Moved all documentation to `docs/` folder
