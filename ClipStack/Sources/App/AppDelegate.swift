@@ -42,6 +42,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return controller
     }()
     
+    private lazy var settingsWindowController: SettingsWindowController = {
+        SettingsWindowController()
+    }()
+    
     func applicationDidFinishLaunching(_ notification: Notification) {
         setupMenuBar()
         setupClipboardMonitoring()
@@ -99,8 +103,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
         if let button = statusItem?.button {
-            button.image = NSImage(systemSymbolName: "doc.on.clipboard", accessibilityDescription: "ClipStack")
-            button.action = #selector(togglePopover)
+            button.title = "📋"
         }
         
         constructMenu()
@@ -111,20 +114,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         menu.addItem(NSMenuItem(title: "ClipStack", action: nil, keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "Settings...", action: #selector(openSettings), keyEquivalent: ","))
+        
+        let showBufferItem = NSMenuItem(title: "Show Buffer", action: #selector(showBuffer), keyEquivalent: "")
+        showBufferItem.target = self
+        menu.addItem(showBufferItem)
+        
+        let clearBufferItem = NSMenuItem(title: "Clear Buffer", action: #selector(clearBuffer), keyEquivalent: "")
+        clearBufferItem.target = self
+        menu.addItem(clearBufferItem)
+        
+        menu.addItem(NSMenuItem.separator())
+        
+        let settingsItem = NSMenuItem(title: "Settings...", action: #selector(openSettings), keyEquivalent: ",")
+        settingsItem.target = self
+        menu.addItem(settingsItem)
+        
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         
         statusItem?.menu = menu
     }
     
-    @objc private func togglePopover() {
-        // TODO: Implement popover toggle
+    @objc private func showBuffer() {
+        handleShowBuffer()
+    }
+    
+    @objc private func clearBuffer() {
+        handleClearBuffer()
     }
     
     @objc private func openSettings() {
-        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-        NSApp.activate(ignoringOtherApps: true)
+        settingsWindowController.show()
     }
 }
 
