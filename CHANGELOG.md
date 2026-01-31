@@ -28,9 +28,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unit tests for ClipBuffer (20+ test cases)
 - Unit tests for HotkeyManager
 - Documentation: HOTKEYS.md
+- GitHub Actions CI/CD workflow
+- Automated build verification on push and PR
+- SwiftLint checks in CI
+- Code quality checks (file headers, line count, TODO comments)
+- CI status badge in README
 
 ### Changed
 - Moved all documentation to `docs/` folder
+- Migrated from NSUserNotification to UserNotifications framework
 
 ### Fixed
 
