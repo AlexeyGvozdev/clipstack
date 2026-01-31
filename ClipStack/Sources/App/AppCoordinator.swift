@@ -91,8 +91,10 @@ final class AppCoordinator: ObservableObject {
             // Start auto-clear if enabled
             setupAutoClear()
             
-            // Request notification permissions
-            requestNotificationPermissions()
+            // Request notification permissions (delayed to avoid bundle issues)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.requestNotificationPermissions()
+            }
             
             isInitialized = true
             print("✅ AppCoordinator initialized successfully")
@@ -240,6 +242,12 @@ final class AppCoordinator: ObservableObject {
     }
     
     private func requestNotificationPermissions() {
+        // Check if we're in a proper bundle environment
+        guard Bundle.main.bundleIdentifier != nil else {
+            print("Skipping notification permissions - not in proper bundle environment")
+            return
+        }
+        
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound]) { granted, error in
             if let error = error {

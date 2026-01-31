@@ -38,7 +38,37 @@ final class CoreDataManager {
     // MARK: - Initialization
     
     private init() {
-        persistentContainer = NSPersistentContainer(name: "ClipStack")
+        // Try to create the persistent container with fallback handling
+        let container: NSPersistentContainer
+        
+        // Try to load the model from the main bundle first
+        if let modelURL = Bundle.main.url(forResource: "ClipStack", withExtension: "momd"),
+           let model = NSManagedObjectModel(contentsOf: modelURL) {
+            container = NSPersistentContainer(name: "ClipStack", managedObjectModel: model)
+        } else {
+            print("Warning: ClipStack.momd not found in main bundle, trying to load from all bundles")
+            // Fallback: try to find the model in any bundle
+            let bundles = Bundle.allBundles
+            var foundModel: NSManagedObjectModel?
+            
+            for bundle in bundles {
+                if let url = bundle.url(forResource: "ClipStack", withExtension: "momd") {
+                    foundModel = NSManagedObjectModel(contentsOf: url)
+                    break
+                }
+            }
+            
+            if let model = foundModel {
+                container = NSPersistentContainer(name: "ClipStack", managedObjectModel: model)
+            } else {
+                // Create a minimal model as fallback
+                print("Creating minimal Core Data model as fallback")
+                let model = Self.createMinimalModel()
+                container = NSPersistentContainer(name: "ClipStack", managedObjectModel: model)
+            }
+        }
+        
+        self.persistentContainer = container
         
         // Configure persistent store
         let storeDescription = persistentContainer.persistentStoreDescriptions.first
@@ -48,7 +78,9 @@ final class CoreDataManager {
         // Load persistent stores
         persistentContainer.loadPersistentStores { _, error in
             if let error = error {
-                fatalError("Failed to load Core Data stack: \(error)")
+                print("Failed to load Core Data stack: \(error)")
+                // Don't crash the app, just continue without Core Data
+                return
             }
         }
         
@@ -58,6 +90,45 @@ final class CoreDataManager {
         
         // Start auto-save
         startAutoSave()
+    }
+    
+    /// Create a minimal Core Data model as fallback
+    private static func createMinimalModel() -> NSManagedObjectModel {
+        let model = NSManagedObjectModel()
+        let clipItemEntity = NSEntityDescription()
+        clipItemEntity.name = "ClipItemEntity"
+        clipItemEntity.managedObjectClassName = "ClipItemEntity"
+        
+        // Add attributes
+        let idAttribute = NSAttributeDescription()
+        idAttribute.name = "id"
+        idAttribute.attributeType = .UUIDAttributeType
+        idAttribute.isOptional = false
+        
+        let contentAttribute = NSAttributeDescription()
+        contentAttribute.name = "content"
+        contentAttribute.attributeType = .stringAttributeType
+        contentAttribute.isOptional = false
+        
+        let timestampAttribute = NSAttributeDescription()
+        timestampAttribute.name = "timestamp"
+        timestampAttribute.attributeType = .dateAttributeType
+        timestampAttribute.isOptional = false
+        
+        let sourceAppAttribute = NSAttributeDescription()
+        sourceAppAttribute.name = "sourceApp"
+        sourceAppAttribute.attributeType = .stringAttributeType
+        sourceAppAttribute.isOptional = true
+        
+        let contentTypeAttribute = NSAttributeDescription()
+        contentTypeAttribute.name = "contentType"
+        contentTypeAttribute.attributeType = .stringAttributeType
+        contentTypeAttribute.isOptional = false
+        
+        clipItemEntity.properties = [idAttribute, contentAttribute, timestampAttribute, sourceAppAttribute, contentTypeAttribute]
+        model.entities = [clipItemEntity]
+        
+        return model
     }
     
     deinit {
