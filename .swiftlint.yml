@@ -54,8 +54,6 @@ function_parameter_count:
 nesting:
   type_level:
     warning: 2
-  statement_level:
-    warning: 5
 
 # Cyclomatic Complexity
 cyclomatic_complexity:
