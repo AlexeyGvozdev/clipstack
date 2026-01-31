@@ -75,9 +75,10 @@ identifier_name:
     - y
 
 # Пользовательские правила
-custom_rules:
-  no_print:
-    name: "No Print Statements"
-    regex: "print\\("
-    message: "Use Logger instead of print()"
-    severity: warning
+# Временно отключено для MVP - print() используется для отладки
+# custom_rules:
+#   no_print:
+#     name: "No Print Statements"
+#     regex: "print\\("
+#     message: "Use Logger instead of print()"
+#     severity: warning
